@@ -1,190 +1,779 @@
+## Business Case
+
+Using the City of Chicago Traffic Crashes dataframe, we are going to model the data to try to answer the following questions:
+
+- Primary causes of car crashes in the Chicago Area
+- Main types of car crashes
+- What can drivers do to prevent crashes?
+
+Focus in this analysis:
+- Use a model to predict whether the main cause of crash was driver’s failure to yield
+
+
+## Methodology:
+1. Obtain and merge the traffic crash data from the Chicago Data Portal regarding the crashes and the people 
+2. Examine and Scrubbing the data to prepare it for modeling
+3. Exploration of the data
+4. Perform and evaluate a baseline model of the data
+5. Perform and evaluate other models of the data and decide which to use
+6. Interpretations and recommendations based on the models and examination of the data.
+7. Future work 
+
+
+## Obtain the Data
+
+Importing, merging, and initial look at the data
+
+
+```python
+# Import pandas and data set
+import pandas as pd
+crash_df = pd.read_csv('Traffic_Crashes_-_Crashes.csv')
+people_df = pd.read_csv('Traffic_Crashes_-_People.csv')
+```
+
+
+```python
+# merge the two datasets into one
+crash_df = pd.merge(crash_df, people_df, on='CRASH_RECORD_ID', how='left')
+```
+
+
+```python
+# preview, make sure everything loaded and merge correctly
+crash_df.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CRASH_RECORD_ID</th>
+      <th>RD_NO_x</th>
+      <th>CRASH_DATE_EST_I</th>
+      <th>CRASH_DATE_x</th>
+      <th>POSTED_SPEED_LIMIT</th>
+      <th>TRAFFIC_CONTROL_DEVICE</th>
+      <th>DEVICE_CONDITION</th>
+      <th>WEATHER_CONDITION</th>
+      <th>LIGHTING_CONDITION</th>
+      <th>FIRST_CRASH_TYPE</th>
+      <th>...</th>
+      <th>EMS_RUN_NO</th>
+      <th>DRIVER_ACTION</th>
+      <th>DRIVER_VISION</th>
+      <th>PHYSICAL_CONDITION</th>
+      <th>PEDPEDAL_ACTION</th>
+      <th>PEDPEDAL_VISIBILITY</th>
+      <th>PEDPEDAL_LOCATION</th>
+      <th>BAC_RESULT</th>
+      <th>BAC_RESULT VALUE</th>
+      <th>CELL_PHONE_USE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>073682ef84ff827659552d4254ad1b98bfec24935cc9cc...</td>
+      <td>JB460108</td>
+      <td>NaN</td>
+      <td>10/02/2018 06:30:00 PM</td>
+      <td>10</td>
+      <td>NO CONTROLS</td>
+      <td>NO CONTROLS</td>
+      <td>CLEAR</td>
+      <td>DARKNESS</td>
+      <td>PARKED MOTOR VEHICLE</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NONE</td>
+      <td>NOT OBSCURED</td>
+      <td>NORMAL</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TEST NOT OFFERED</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1560fb8a1e32b528fef8bfd677d2b3fc5ab37278b157fa...</td>
+      <td>JC325941</td>
+      <td>NaN</td>
+      <td>06/27/2019 04:00:00 PM</td>
+      <td>45</td>
+      <td>NO CONTROLS</td>
+      <td>NO CONTROLS</td>
+      <td>CLEAR</td>
+      <td>DAYLIGHT</td>
+      <td>SIDESWIPE SAME DIRECTION</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>UNKNOWN</td>
+      <td>UNKNOWN</td>
+      <td>NORMAL</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TEST NOT OFFERED</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1560fb8a1e32b528fef8bfd677d2b3fc5ab37278b157fa...</td>
+      <td>JC325941</td>
+      <td>NaN</td>
+      <td>06/27/2019 04:00:00 PM</td>
+      <td>45</td>
+      <td>NO CONTROLS</td>
+      <td>NO CONTROLS</td>
+      <td>CLEAR</td>
+      <td>DAYLIGHT</td>
+      <td>SIDESWIPE SAME DIRECTION</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>UNKNOWN</td>
+      <td>UNKNOWN</td>
+      <td>NORMAL</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TEST NOT OFFERED</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>009e9e67203442370272e1a13d6ee51a4155dac65e583d...</td>
+      <td>JA329216</td>
+      <td>NaN</td>
+      <td>06/30/2017 04:00:00 PM</td>
+      <td>35</td>
+      <td>STOP SIGN/FLASHER</td>
+      <td>FUNCTIONING PROPERLY</td>
+      <td>CLEAR</td>
+      <td>DAYLIGHT</td>
+      <td>TURNING</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>FAILED TO YIELD</td>
+      <td>UNKNOWN</td>
+      <td>UNKNOWN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TEST NOT OFFERED</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>009e9e67203442370272e1a13d6ee51a4155dac65e583d...</td>
+      <td>JA329216</td>
+      <td>NaN</td>
+      <td>06/30/2017 04:00:00 PM</td>
+      <td>35</td>
+      <td>STOP SIGN/FLASHER</td>
+      <td>FUNCTIONING PROPERLY</td>
+      <td>CLEAR</td>
+      <td>DAYLIGHT</td>
+      <td>TURNING</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NONE</td>
+      <td>NOT OBSCURED</td>
+      <td>NORMAL</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>TEST NOT OFFERED</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 78 columns</p>
+</div>
+
+
+
+
+```python
+# A quick preview of the data
+display(crash_df.info())
+crash_df.describe()
+```
+
+    <class 'pandas.core.frame.DataFrame'>
+    Int64Index: 983415 entries, 0 to 983414
+    Data columns (total 78 columns):
+     #   Column                         Non-Null Count   Dtype  
+    ---  ------                         --------------   -----  
+     0   CRASH_RECORD_ID                983415 non-null  object 
+     1   RD_NO_x                        975129 non-null  object 
+     2   CRASH_DATE_EST_I               55419 non-null   object 
+     3   CRASH_DATE_x                   983415 non-null  object 
+     4   POSTED_SPEED_LIMIT             983415 non-null  int64  
+     5   TRAFFIC_CONTROL_DEVICE         983415 non-null  object 
+     6   DEVICE_CONDITION               983415 non-null  object 
+     7   WEATHER_CONDITION              983415 non-null  object 
+     8   LIGHTING_CONDITION             983415 non-null  object 
+     9   FIRST_CRASH_TYPE               983415 non-null  object 
+     10  TRAFFICWAY_TYPE                983415 non-null  object 
+     11  LANE_CNT                       446675 non-null  float64
+     12  ALIGNMENT                      983415 non-null  object 
+     13  ROADWAY_SURFACE_COND           983415 non-null  object 
+     14  ROAD_DEFECT                    983415 non-null  object 
+     15  REPORT_TYPE                    954194 non-null  object 
+     16  CRASH_TYPE                     983415 non-null  object 
+     17  INTERSECTION_RELATED_I         264399 non-null  object 
+     18  NOT_RIGHT_OF_WAY_I             35715 non-null   object 
+     19  HIT_AND_RUN_I                  242928 non-null  object 
+     20  DAMAGE                         983415 non-null  object 
+     21  DATE_POLICE_NOTIFIED           983415 non-null  object 
+     22  PRIM_CONTRIBUTORY_CAUSE        983415 non-null  object 
+     23  SEC_CONTRIBUTORY_CAUSE         983415 non-null  object 
+     24  STREET_NO                      983415 non-null  int64  
+     25  STREET_DIRECTION               983410 non-null  object 
+     26  STREET_NAME                    983413 non-null  object 
+     27  BEAT_OF_OCCURRENCE             983403 non-null  float64
+     28  PHOTOS_TAKEN_I                 12866 non-null   object 
+     29  STATEMENTS_TAKEN_I             23004 non-null   object 
+     30  DOORING_I                      3183 non-null    object 
+     31  WORK_ZONE_I                    6462 non-null    object 
+     32  WORK_ZONE_TYPE                 5164 non-null    object 
+     33  WORKERS_PRESENT_I              1493 non-null    object 
+     34  NUM_UNITS                      983415 non-null  int64  
+     35  MOST_SEVERE_INJURY             982532 non-null  object 
+     36  INJURIES_TOTAL                 982542 non-null  float64
+     37  INJURIES_FATAL                 982542 non-null  float64
+     38  INJURIES_INCAPACITATING        982542 non-null  float64
+     39  INJURIES_NON_INCAPACITATING    982542 non-null  float64
+     40  INJURIES_REPORTED_NOT_EVIDENT  982542 non-null  float64
+     41  INJURIES_NO_INDICATION         982542 non-null  float64
+     42  INJURIES_UNKNOWN               982542 non-null  float64
+     43  CRASH_HOUR                     983415 non-null  int64  
+     44  CRASH_DAY_OF_WEEK              983415 non-null  int64  
+     45  CRASH_MONTH                    983415 non-null  int64  
+     46  LATITUDE                       977913 non-null  float64
+     47  LONGITUDE                      977913 non-null  float64
+     48  LOCATION                       977913 non-null  object 
+     49  PERSON_ID                      982540 non-null  object 
+     50  PERSON_TYPE                    982540 non-null  object 
+     51  RD_NO_y                        982539 non-null  object 
+     52  VEHICLE_ID                     962876 non-null  float64
+     53  CRASH_DATE_y                   982540 non-null  object 
+     54  SEAT_NO                        202307 non-null  float64
+     55  CITY                           728774 non-null  object 
+     56  STATE                          736767 non-null  object 
+     57  ZIPCODE                        666120 non-null  object 
+     58  SEX                            967956 non-null  object 
+     59  AGE                            704186 non-null  float64
+     60  DRIVERS_LICENSE_STATE          583538 non-null  object 
+     61  DRIVERS_LICENSE_CLASS          509291 non-null  object 
+     62  SAFETY_EQUIPMENT               979605 non-null  object 
+     63  AIRBAG_DEPLOYED                963642 non-null  object 
+     64  EJECTION                       970329 non-null  object 
+     65  INJURY_CLASSIFICATION          982000 non-null  object 
+     66  HOSPITAL                       180236 non-null  object 
+     67  EMS_AGENCY                     115037 non-null  object 
+     68  EMS_RUN_NO                     18739 non-null   object 
+     69  DRIVER_ACTION                  778324 non-null  object 
+     70  DRIVER_VISION                  778081 non-null  object 
+     71  PHYSICAL_CONDITION             778903 non-null  object 
+     72  PEDPEDAL_ACTION                18564 non-null   object 
+     73  PEDPEDAL_VISIBILITY            18521 non-null   object 
+     74  PEDPEDAL_LOCATION              18565 non-null   object 
+     75  BAC_RESULT                     779427 non-null  object 
+     76  BAC_RESULT VALUE               1254 non-null    float64
+     77  CELL_PHONE_USE                 1156 non-null    object 
+    dtypes: float64(15), int64(6), object(57)
+    memory usage: 592.7+ MB
+
+
+
+### Column Names and Descriptions
+
+**POSTED_SPEED_LIMIT**	
+Posted speed limit, as determined by reporting officer
+
+**WEATHER_CONDITION**	
+Weather condition at time of crash, as determined by reporting officer
+
+**LIGHTING_CONDITION**	
+Light condition at time of crash, as determined by reporting officer
+
+**FIRST_CRASH_TYPE**	
+Type of first collision in crash
+
+**TRAFFICWAY_TYPE**	
+Trafficway type, as determined by reporting officer
+
+**LANE_CNT**	
+Total number of through lanes in either direction, excluding turn lanes, as determined by reporting officer (0 = intersection)
+
+**ALIGNMENT**	
+Street alignment at crash location, as determined by reporting officer
+
+**ROADWAY_SURFACE_COND**	
+Road surface condition, as determined by reporting officer
+
+**ROAD_DEFECT**	
+Road defects, as determined by reporting officer
+
+**CRASH_TYPE**	
+A general severity classification for the crash. Can be either Injury and/or Tow Due to Crash or No Injury / Drive Away
+
+**INTERSECTION_RELATED_I**	
+A field observation by the police officer whether an intersection played a role in the crash. Does not represent whether or not the crash occurred within the intersection.
+
+**NOT_RIGHT_OF_WAY_I**	
+Whether the crash begun or first contact was made outside of the public right-of-way.
+
+**HIT_AND_RUN_I**
+Crash did/did not involve a driver who caused the crash and fled the scene without exchanging information and/or rendering aid
+
+**DAMAGE**	
+A field observation of estimated damage.
+
+**PRIM_CONTRIBUTORY_CAUSE**	
+The factor which was most significant in causing the crash, as determined by officer judgment
+
+**SEC_CONTRIBUTORY_CAUSE**	
+The factor which was second most significant in causing the crash, as determined by officer judgment
+
+**BEAT_OF_OCCURRENCE**	
+Chicago Police Department Beat ID. Boundaries available at https://data.cityofchicago.org/d/aerh-rz74
+
+**STATEMENTS_TAKEN_I**	
+Whether statements were taken from unit(s) involved in crash
+
+**WORK_ZONE_TYPE**	
+The type of work zone, if any
+
+**NUM_UNITS**	
+Number of units involved in the crash. A unit can be a motor vehicle, a pedestrian, a bicyclist, or another non-passenger roadway user. Each unit represents a mode of traffic with an independent trajectory.
+
+**CRASH_HOUR**	
+The hour of the day component of CRASH_DATE.
+
+**CRASH_DAY_OF_WEEK**	
+The day of the week component of CRASH_DATE. Sunday=1
+
+**CRASH_MONTH**	
+The month component of CRASH_DATE.
+
+**SEX**	
+Gender of person involved in crash, as determined by reporting officer
+
+**AGE**	
+Age of person involved in crash
+
+**AIRBAG_DEPLOYED**	
+Whether vehicle occupant airbag deployed as result of crash
+
+**EJECTION**	
+Whether vehicle occupant was ejected or extricated from the vehicle as a result of crash
+
+**INJURY_CLASSIFICATION**	
+Severity of injury person sustained in the crash
+
+**DRIVER_ACTION**	
+Driver action that contributed to the crash, as determined by reporting officer
+
+**DRIVER_VISION**	
+What, if any, objects obscured the driver’s vision at time of crash
+
+**PHYSICAL_CONDITION**	
+Driver’s apparent physical condition at time of crash, as observed by the reporting officer
+
+**PEDPEDAL_VISIBILITY**	
+Visibility of pedestrian of cyclist safety equipment in use at time of crash
+
+**BAC_RESULT**	
+Status of blood alcohol concentration testing for driver or other person involved in crash
+
+**BAC_RESULT VALUE**	
+Driver’s blood alcohol concentration test result (fatal crashes may include pedestrian or cyclist results)
+
+**CELL_PHONE_USE**	
+Whether person was/was not using cellphone at the time of the crash, as determined by the reporting officer
+
+
+## Scrubbing and exploring the data
+
+The process of scrubbing the dataset included: 
+
+1. Removing all duplicate crashes based on the unique crash_ID
+
+2. Dropping columns that would not be beneficial to the model or had similar data to other columns used.
+
+3. Dealing with null values
+   - Object null values were either dropped, filled with their verison of 'NO', or filled with "UNKNOWN" based on the unique values in each column.
+   - Numerical null values were either dropped, filled with 0, filled with the mean, or filled with the mode based on the unique values and make up of each column.
+   
+4. Once all the scrubbing was completed, the final shape of the dataframe was (442956, 34)
+
+
+The process of exploring the dataset included:
+
+1. Creating functions to streamline plotting data.
+
+```python
+# Function to graph bar chart
+def bar_plot(col, target, df):
+    """Creates bar plot against target variable and saves plot as png
+    to figures folder"""
+    ax = sns.barplot(y=df[target], x= df[col], orient='h', data=df)
+    ax.set_title(f"{col} vs {target}")
+
+    # Save image as png
+    plt.savefig(f'figures/bar_{col}_v_{target}.png', transparent=True, bbox_inches='tight');
+```
+
+
+```python
+# Function to graph a count plot
+def count_plot(df,col):
+    """Creates boxplot of a column and saves plot as png to figures folder"""
+    ax = sns.countplot(x=df[col], data=df)
+    ax.set_title(f"{col}")
+    plt.xticks(rotation=270)
+    
+    # Save image as png
+    plt.savefig(f'figures/count_{col}.png', transparent=True, bbox_inches='tight');
+```
+
+
+```python
+def scatter_plot(col,target,df):
+    """Creates a scatterplot of a column against target variable with a hue of
+    crash type and saves plot to figures folder."""
+    
+    ax = sns.scatterplot(data=df, x=df[col], y=df[target])
+    ax.set_title(f"{col} v {target}")
+     # Save image as png
+    plt.savefig(f'figures/scatter_{col}_v_{target}.png', transparent=True, bbox_inches='tight');
+```
+
+2. Looking at count plots for the categorical columns. This is where it was decided to focus on Driver_Action. 
+
+
+![countplot driver action](Figures/count_DRIVER_ACTION.png)
+
+
+
+3. Driver_action was One-Hot Encoded and the other object columns were LabelEncoded
+
+
+```python
+feats = ['DRIVER_ACTION']
+```
+
+
+```python
+encode_df = pd.get_dummies(crash_df, drop_first=True, columns=feats)
+encode_df.info()
+```
+
+
+```python
+# LabelEncode Feature Columns onto a new df to examine against our target
+from sklearn.preprocessing import LabelEncoder
+
+# creating instance of labelencoder
+labelencoder = LabelEncoder()
+
+# Using for loop to loop through object_col and Assign numerical values 
+# and storing in another column
+for col in object_col:
+    encode_df[col] = labelencoder.fit_transform(encode_df[col])
+
+encode_df.head()
+```
+
+
+4. Histograms of numerical columns were made.
+
+
+```python
+# Histograms 
+encode_df.hist(figsize = (30,20))
+plt.savefig('Figures/crash_df_hist.png', dpi=300, bbox_inches='tight');
+```
+
+
+![histogram](Figures/crash_df_hist.png)
+
+
+
+5. Barplots and scatterplots were made to get a better idea of the breakdown of the data and helped narrow down the target to Failed to yield. 
+
+
+```python
+# Bar graph of the Crash Type
+
+plt.figure(figsize=(15,15))
+
+y= fail_yield.FIRST_CRASH_TYPE.value_counts().values
+x=fail_yield.FIRST_CRASH_TYPE.value_counts().index
+
+sns.barplot(y, x)
+plt.title('Fail to Yield First Crash Type', size=30)
+plt.ylabel("Crash Type", size=25, rotation=90)
+plt.xlabel("Quantity", size=25)
+plt.xticks(size=15)
+plt.yticks(size=15)
+
+plt.savefig('Figures/Fail_yield_first_crash.png', dpi=300, bbox_inches='tight');
+```
+
+
+![barplot failed to yield crash type](Figures/Fail_yield_first_crash.png)
+
+
+
+```python
+# Bar graph of the Crash Type
+
+plt.figure(figsize=(15,15))
+
+x= fail_yield.CRASH_HOUR.value_counts().values
+y=fail_yield.CRASH_HOUR.value_counts().index
+
+sns.barplot(y, x)
+plt.title('Fail to Yield CRASH HOUR', size=30)
+plt.ylabel("Quantity", size=25, rotation=90)
+plt.xlabel("Hour", size=25)
+plt.xticks(size=15)
+plt.yticks(size=15)
+
+plt.savefig('Figures/Fail_yield_crash_hour.png', dpi=300, bbox_inches='tight');
+```
+
+
+![Failed to yield crash hour](Figures/Fail_yield_crash_hour.png)
+
+
+
+```python
+# Bar graph of the Crash Type
+
+plt.figure(figsize=(15,15))
+
+x= fail_yield.DRIVER_VISION.value_counts().values
+y=fail_yield.DRIVER_VISION.value_counts().index
+
+sns.barplot(y, x)
+plt.title('Fail to Yield DRIVER VISION', size=30)
+plt.ylabel("Quantity", size=25, rotation=90)
+plt.xlabel("", size=25)
+plt.xticks(size=15, rotation=90)
+plt.yticks(size=15)
+
+plt.savefig('Figures/Fail_yield_driver_vision.png', dpi=300, bbox_inches='tight');
+```
+
+
+![failed to yield drivers vision](Figures/Fail_yield_driver_vision.png)
+
+
+## Models for Target: FAILED TO YIELD
+
+
+
+Functions to help ease the process of creating multiple models. 
+
+
+```python
+# Function to print scores
+from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score, confusion_matrix
+def print_metrics(labels, preds, time):
+    """input (labels, preds) and prints Precision score, Recall score,
+    Accuracy score, F1 score, and Confusion matrix"""
+    print("Precision Score: {}".format(precision_score(labels, preds)))
+    print("Recall Score: {}".format(recall_score(labels, preds)))
+    print("Accuracy Score: {}".format(accuracy_score(labels, preds)))
+    print("F1 Score: {}".format(f1_score(labels, preds)))
+    print("Confision Matrix: \n{}".format(confusion_matrix(labels, preds)))
+    print("\n Run Time: {}".format(time))
+```
+
+
+```python
+def print_tree(dt, feature_name, save_file):
+    """function to print and save the Decision Tree printout"""
+    dot_data = tree.export_graphviz(dt, 
+                  feature_names=feature_name,    
+                  filled=True, rounded=True,  
+                  special_characters=True,
+                  out_file=None)
+            
+    graph = graphviz.Source(dot_data)
+
+    graph.format = "png"
+    graph.render(f'figures/{save_file}')
+    return graph.view()
+```
+
+
+```python
+def plot_feature_importances(model):
+    """Plots feature importance"""
+    n_features = X_train.shape[1]
+    plt.figure(figsize=(8,8))
+    plt.barh(range(n_features), model.feature_importances_, align='center') 
+    plt.yticks(np.arange(n_features), X_train.columns.values) 
+    plt.xlabel('Feature importance')
+    plt.ylabel('Feature')
+```
+
+
+THe data was then Train-Test_Split and scaled using StandardScaler
+
+
+
+
+
+### Baseline model: Dummy Classifier
+
+Dummy Classifier was used as the baseline model due to its speed and simplicity. It makes predictions based on simple rules. In this case, it made prediction based on class by using the strategy 'stratified.'
+
+
+```python
+# generates random predictions by respecting the training set class distribution.
+from sklearn.dummy import DummyClassifier
+```
+
+
+```python
+start = time.time()
+
+# Instantiate 
+clf = DummyClassifier(strategy='stratified', random_state=0)
+
+# Fit the Classifier
+clf.fit(X_train, y_train)
+DummyClassifier(random_state=0, strategy='stratified')
+clf.score(X_test, y_test)
+
+# Predict on the test set
+y_preds = clf.predict(X_test)
+
+end = time.time()
+dum_n = end - start
+print(f'time: {dum_n}')
+```
+
+The scores with the Dummy Classifier are low, which was to be expected. There is a very high false positive rate. 
+
+```python
+print_metrics(y_preds, y_test, dum_n)
+```
+
+    Precision Score: 0.14946210564486884
+    Recall Score: 0.15072834765648807
+    Accuracy Score: 0.7469826184367434
+    F1 Score: 0.15009255606469818
+    Confision Matrix: 
+    [[80212 14073]
+     [13934  2473]]
+    
+     Run Time: 0.05151510238647461
+
+
+### Final model: Decision Tree
+
+Decision trees break data into smaller subsets based on feature importance. Unlike distance based models with a dataset this large, it will not take hours to run.
+
+
+![dt flowchart](Features/dt_printout.png)
+
+
+```python
+plot_feature_importances(dt_model)
+```
+
+![feature importance plot](Figures/feature_importance.png)
+
+
+
+
+
+```python
+start = time.time()
+
+# Train a Decesion Tree
+dt_model = DecisionTreeClassifier(random_state=10, max_depth=5)  
+dt_model.fit(X_train, y_train) 
+
+# Make predictions for test data
+y_pred = dt_model.predict(X_test)
+
+end = time.time()
+dt_n = end - start
+dt_n
+```
+
+The results of this model were much better than the baseline model, but still not great. 
+
+```python
+print_metrics(y_pred, y_test, dt_n)
+```
+
+    Precision Score: 0.5809259035416415
+    Recall Score: 0.7744742567077593
+    Accuracy Score: 0.9120713330683338
+    F1 Score: 0.6638809268915979
+    Confision Matrix: 
+    [[91347  6934]
+     [ 2799  9612]]
+    
+     Run Time: 1.4316511154174805
+     
+     
+### Recommendations
+
+In driver education classes:
+- Focus more on the importance of yielding especially when turning, changing lanes, and with pedestrians present
+
+- Rush hour when everyone is in a rush to get to work/get home is the time to be extra cautious 
+
+For filling in crash reports:
+ - Since most of the data is based on the determination of the reporting officer, having universal language would help repetitive data and multiple inputs meaning the same thing. ie the Hospital column having over 25 ways that "Refused Medical Attention" was inputted. 
+ 
+ 
+ 
+#### Recommended Future Work 
+
+- Examine how other action and causes affect the models
+- Add the third linked dataframe covering the cars involved to go more in depth.
+
+- Streamline the data:
+ - Research the differences in crashes, causes, etc. Example: not yielding to parked vehicle? 
+ - Combine like columns, rows based on the research
+ - Binning and cluster data 
+- Run other models that take longer to run
 
-# Module 3 Final Project
 
 
-## Introduction
 
-In this lesson, we'll review all the guidelines and specifications for the final project for Module 3.
-
-
-## Objectives
-
-- Understand all required aspects of the Final Project for Module 3
-- Understand all required deliverables
-- Understand what constitutes a successful project
-
-## Final Project Summary
-
-Congratulations! You've made it through another _intense_ module, and now you're ready to show off your newfound Machine Learning skills!
-
-![awesome](https://raw.githubusercontent.com/learn-co-curriculum/dsc-mod-3-project-v2-1/master/smart.gif)
-
-All that remains for Module 3 is to complete the final project!
-
-## The Project
-
-The main goal of this project is to create a classification model. For this project you have the choice to either:
-
-- choose a data set from a curated list
-- choose your own data set _outside_ of the curated list. 
-
-The data guidelines for either option are shown below
-
-For this project, you're going to select a dataset of your choosing and create a classification model. You'll start by identifying a problem you can solve with classification, and then identify a dataset. You'll then use everything you've learned about Data Science and Machine Learning thus far to source a dataset, preprocess and explore it, and then build and interpret a classification model that answers your chosen question.
-
-### a. Choosing the data from a curated list
-
-You are allowed to select one of the four data sets described below. Each comes with its own advantages and disadvantages, and, of course, its own associated business problem and stakeholders. It may be desirable to flesh out your understanding of the audience or the business proposition a little more than sketched out here. If you select one of these four data sets, you **need no further approval from your instructor**.
-
-
-1) [Chicago Car Crash Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-Crashes/85ca-t3if). Note this links also to [Vehicle Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-Vehicles/68nd-jvt3) and to [Driver/Passenger Data](https://data.cityofchicago.org/Transportation/Traffic-Crashes-People/u6pd-qa9d).
-
-Build a classifier to predict the primary contributory cause of a car accident, given information about the car, the people in the car, the road conditions etc. You might imagine your audience as a Vehicle Safety Board who's interested in reducing traffic accidents, or as the City of Chicago who's interested in becoming aware of any interesting patterns. Note that there is a **multi-class** classification problem. You will almost certainly want to bin or trim or otherwise limit the number of target categories on which you ultimately predict. Note e.g. that some primary contributory causes have very few samples.
-
-2) [Terry Stops Data](https://catalog.data.gov/dataset/terry-stops).
-In [*Terry v. Ohio*](https://www.oyez.org/cases/1967/67), a landmark Supreme Court case in 1967-8, the court found that a police officer was not in violation of the "unreasonable search and seizure" clause of the Fourth Amendment, even though he stopped and frisked a couple of suspects only because their behavior was suspicious. Thus was born the notion of "reasonable suspicion", according to which an agent of the police may e.g. temporarily detain a person, even in the absence of clearer evidence that would be required for full-blown arrests etc. Terry Stops are stops made of suspicious drivers.
-
-Build a classifier to predict whether an arrest was made after a Terry Stop, given information about the presence of weapons, the time of day of the call, etc. Note that this is a **binary** classification problem.
-
-Note that this dataset also includes information about gender and race. You **may** use this data as well. You may, e.g. pitch your project as an inquiry into whether race (of officer or of subject) plays a role in whether or not an arrest is made.
-
-If you **do** elect to make use of race or gender data, be aware that this can make your project a highly sensitive one; your discretion will be important, as well as your transparency about how you use the data and the ethical issues surrounding it.
-
-3) [Customer Churn Data](https://www.kaggle.com/becksddf/churn-in-telecoms-dataset)
-
-Build a classifier to predict whether a customer will ("soon") stop doing business with SyriaTel, a telecommunications company. Note that this is a **binary** classification problem.
-
-Most naturally, your audience here would be the telecom business itself, interested in losing money on customers who don't stick around very long. Are there any predictable patterns here?
-
-4) [Tanzanian Water Well Data](https://www.drivendata.org/competitions/7/pump-it-up-data-mining-the-water-table/page/23/) (*active competition*!)
-Tanzania, as a developing country, struggles with providing clean water to its population of over 57,000,000. There are many waterpoints already established in the country, but some are in need of repair while others have failed altogether.
-
-Build a classifier to predict the condition of a water well, using information about the sort of pump, when it was installed, etc. Note that this is a **ternary** classification problem.
-
-
-### b. Selecting a Data Set _Outside_ of the Curated List
-
-We encourage you to be very thoughtful when identifying your problem and selecting your data set--an overscoped project goal or a poor data set can quickly bring an otherwise promising project to a grinding halt. **If you are going to choose your own data set, you'll need to run it by your instructor for approval**.
-
-To help you select an appropriate data set for this project, we've set some guidelines:
-
-1. Your dataset should work for classification. The classification task can be either binary or multiclass, as long as it's a classification model.   
-
-2. Your dataset needs to be of sufficient complexity. Try to avoid picking an overly simple dataset. Try to avoid extremely small datasets, as well as the most common datasets like titanic, iris, MNIST, etc. We want to see all the steps of the Data Science Process in this project--it's okay if the dataset is mostly clean, but we expect to see some preprocessing and exploration. See the following section, **_Data Set Constraints_**, for more information on this.   
-
-3. On the other end of the spectrum, don't pick a problem that's too complex, either. Stick to problems that you have a clear idea of how you can use machine learning to solve it. For now, we recommend you stay away from overly complex problems in the domains of Natural Language Processing or Computer Vision--although those domains make use of Supervised Learning, they come with a lot of other special requirements and techniques that you don't know yet (but you'll learn soon!). If you're chosen problem feels like you've overscoped, then it probably is. If you aren't sure if your problem scope is appropriate, double check with your instructor!  
-
-#### Data Set Constraints
-
-When selecting a data set, be sure to take into consideration the following constraints:
-
-1. Your data set can't be one we've already worked with in any labs.
-2. Your data set should contain a minimum of 1000 rows.    
-3. Your data set should contain a minimum of 10 predictor columns, before any one-hot encoding is performed.   
-4. Your instructor must provide final approval on your data set.
-
-#### Problem First, or Data First?
-
-There are two ways that you can about getting started: **_Problem-First_** or **_Data-First_**.
-
-**_Problem-First_**: Start with a problem that you want to solve with classification, and then try to find the data you need to solve it.  If you can't find any data to solve your problem, then you should pick another problem.
-
-**_Data-First_**: Take a look at some of the most popular internet repositories of cool data sets we've listed below. If you find a data set that's particularly interesting for you, then it's totally okay to build your problem around that data set.
-
-There are plenty of amazing places that you can get your data from. We recommend you start looking at data sets in some of these resources first:
-
-* [UCI Machine Learning Datasets Repository](https://archive.ics.uci.edu/ml/datasets.html)
-* [Kaggle Datasets](https://www.kaggle.com/datasets)
-* [Awesome Datasets Repo on Github](https://github.com/awesomedata/awesome-public-datasets)
-* [New York City Open Data Portal](https://opendata.cityofnewyork.us/)
-* [Inside AirBNB ](http://insideairbnb.com/)
-
-
-## The Deliverables
-
-For online students, your completed project should contain the following four deliverables:
-
-1. A **_Jupyter Notebook_** containing any code you've written for this project. This work will need to be pushed to a public GitHub repository dedicated for this project.
-
-2. An organized **README.md** file in the GitHub repository that describes the contents of the repository. This file should be the source of information for navigating through the repository. 
-
-3. A **_[Blog Post](https://github.com/learn-co-curriculum/dsc-welcome-blogging-v2-1)_**.
-
-4. An **_"Executive Summary" PowerPoint Presentation_** that gives a brief overview of your problem/dataset, and each step of the OSEMN process.
-
-Note: On-campus students may have different deliverables, please speak with your instructor.
-
-### Jupyter Notebook Must-Haves
-
-For this project, your Jupyter Notebook should meet the following specifications:
-
-**_Organization/Code Cleanliness_**
-
-* The notebook should be well organized, easy to follow, and code is commented where appropriate.  
-    * Level Up: The notebook contains well-formatted, professional looking markdown cells explaining any substantial code. All functions have docstrings that act as professional-quality documentation.  
-* The notebook is written to technical audiences with a way to both understand your approach and reproduce your results. The target audience for this deliverable is other data scientists looking to validate your findings.  
-
-**_Process, Methodology, and Findings_**
-
-* Your notebook should contain a clear record of your process and methodology for exploring and preprocessing your data, building and tuning a model, and interpreting your results.
-* We recommend you use the OSEMN process to help organize your thoughts and stay on track.
-
-### Blog Post Must-Haves
-
-Refer back to the [Blogging Guidelines](https://github.com/learn-co-curriculum/dsc-welcome-blogging-v2-1) for the technical requirements and blog ideas.
-
-## The Process
-
-These steps are informed by Smart Vision's<sup>1</sup> description of the CRISP-DM process.
-
-### 1. Business Understanding
-
-Start by reading this document, and making sure that you understand the kinds of questions being asked.  In order to narrow your focus, you will likely want to make some design choices about your specific audience, rather than addressing all of the "many people" mentioned in the background section.  Do you want to emphasize affordability, investment, or something else?  This framing will help you choose which stakeholder claims to address.
-
-Three things to be sure you establish during this phase are:
-
-1. **Objectives:** what questions are you trying to answer, and for whom?
-2. **Project plan:** you may want to establish more formal project management practices, such as daily stand-ups or using a Trello board, to plan the time you have remaining.  Regardless you should determine the division of labor, communication expectations, and timeline.
-3. **Success criteria:** what does a successful project look like?  How will you know when you have achieved it?
-
-### 2. Data Understanding
-
-Write a script to download the data (or instructions for future users on how to manually download it), and explore it.  Do you understand what the columns mean?  How do the three data tables relate to each other?  How will you select the subset of relevant data?  What kind of data cleaning is required?
-
-It may be useful to generate visualizations of the data during this phase.
-
-### 3. Data Preparation
-
-Through SQL and Pandas, perform any necessary data cleaning and develop a query that pulls in all relevant data for analysis in a linear regression model, including any merging of tables.  Be sure to document any data that you choose to drop or otherwise exclude.  This is also the phase to consider any feature scaling or one-hot encoding required to feed the data into a classification model.
-
-### 4. Modeling
-
-The focus this time is on prediction. Good prediction is a matter of the model generalizing well. Steps we can take to assure good generalization include: testing the model on unseen data, cross-validation, and regularization. What sort of model should you build? A diverse portfolio is probably best. Classification models we've looked at so far include logistic regression, decision trees, bagging, and boosting, each of these with different flavors. You are encouraged to try any or all of these.
-
-### 5. Evaluation
-
-Recall that there are many different metrics we might use for evaluating a classification model. Accuracy is intuitive, but can be misleading, especially if you have class imbalances in your target. Perhaps, depending on you're defining things, it is more important to minimize false positives, or false negatives. It might therefore be more appropriate to focus on precision or recall. You might also calculate the AUC-ROC to measure your model's *discrimination*.
-
-### 6. Deployment
-
-In this case, your "deployment" comes in the form of the deliverables listed above. Make sure you can answer the following questions about your process:
-
- - "How did you pick the question(s) that you did?"
- - "Why are these questions important from a business perspective?"
- - "How did you decide on the data cleaning options you performed?"
- - "Why did you choose a given method or library?"
- - "Why did you select those visualizations and what did you learn from each of them?"
- - "Why did you pick those features as predictors?"
- - "How would you interpret the results?"
- - "How confident are you in the predictive quality of the results?"
- - "What are some of the things that could cause the results to be wrong?"
-
-
-## Grading Rubric 
-
-Online students can find a PDF of the grading rubric for the project [here](https://github.com/learn-co-curriculum/dsc-mod-3-project-v2-1/blob/master/module_3_project_rubric.pdf). _Note: On-campus students may have different requirements, please speak with your instructor._ 
-
-
-## Citation
-
-1. "What is the CRISP-DM Methodology?" Smart Vision Europe. Available at: https://www.sv-europe.com/crisp-dm-methodology/
