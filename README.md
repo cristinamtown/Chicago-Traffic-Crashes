@@ -347,24 +347,29 @@ The scores with the Dummy Classifier are low, which was to be expected. There is
 
 *Results:*
  
-Precision Score: 0.7461035884358053
-Recall Score: 0.7469826184367434
-Accuracy Score: 0.7469826184367434
-F1 Score: 0.7465423102142656
+- Precision Score: 0.7461035884358053
+- Recall Score: 0.7469826184367434
+- Accuracy Score: 0.7469826184367434
+- F1 Score: 0.7465423102142656
+- Run Time: 0.07404804229736328
 
 Confision Matrix: 
 
+<table>
+<thead>
+<tr><th></th><th></th><th>Actual</th></tr>
+</thead>
+<tbody>
+    
+<tr><td></td><td></td><td>Positive</td><td>Negative</td></tr>
+    
+<tr><th>Predicted</th><td>Positive</td><td>80212</td><td>13934</td></tr>
 
-|             |                       _Actual_         |
-| :---------- | :---------: | :---------: | ---------: |
-|             |             | *Postive*   | *Negative* |
-|             | :---------: | :---------: | ---------: |
-| _Predicted_ | *Postive*   |  80212      |  13934     |
-|             | :---------: | :---------: | ---------: |
-|             | *Negative*  |  14073      |  2473      |
+<tr><td></td><td>Negative</td><td>14073</td><td>2473</td></tr>
 
 
- Run Time: 0.07404804229736328
+</tbody>
+</table>
 
 
 
@@ -415,13 +420,13 @@ print_metrics(y_pred, y_test, dt_n)
 
 <table>
 <thead>
-<tr><th></th><th>Actual</th><th></th></tr>
+<tr><th></th><th></th><th>Actual</th></tr>
 </thead>
 <tbody>
     
 <tr><td></td><td></td><td>Positive</td><td>Negative</td></tr>
     
-<tr><td>Predicted</td><td>Postiive</td><td>93292</td><td>854</td></tr>
+<tr><th>Predicted</th><td>Positive</td><td>93292</td><td>854</td></tr>
 
 <tr><td></td><td>Negative</td><td>15452</td><td>1094</td></tr>
 
