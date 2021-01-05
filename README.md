@@ -413,12 +413,21 @@ Accuracy Score: 0.8526903479926282
 F1 Score: 0.91963133
 Confision Matrix: 
 
-|             |                       _Actual_         |
-| ---------- | --------- | --------- | --------- |
-|             |             | *Postive*   | *Negative* |
-| _Predicted_ | *Postive*   |  93292      |   854      |
-|             | *Negative*  |  15452      |   1094     |
+<table>
+<thead>
+<tr><th></th><th>Actual</th><th></th></tr>
+</thead>
+<tbody>
+    
+<tr><td></td><td></td><td>Positive</td><td>Negative</td></tr>
+    
+<tr><td>Predicted</td><td>Postiive</td><td>93292</td><td>854</td></tr>
 
+<tr><td></td><td>Negative</td><td>15452</td><td>1094</td></tr>
+
+
+</tbody>
+</table>
      
 
 There are two precision, recall, and F1-Score. The second number listed does not take into account the class imbalance. The first score is weighted to take the class imbalance into account. 
