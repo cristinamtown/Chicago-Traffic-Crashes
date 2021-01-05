@@ -416,7 +416,9 @@ print_metrics(y_pred, y_test, dt_n)
 - Recall Score: 0.99092898
 - Accuracy Score: 0.8526903479926282
 - F1 Score: 0.91963133
-- Confision Matrix: 
+- Run Time: 1.3285181522369385
+
+Confision Matrix: 
 
 <table>
 <thead>
