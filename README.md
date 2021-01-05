@@ -39,278 +39,6 @@ crash_df = pd.merge(crash_df, people_df, on='CRASH_RECORD_ID', how='left')
 ```
 
 
-```python
-# preview, make sure everything loaded and merge correctly
-crash_df.head()
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>CRASH_RECORD_ID</th>
-      <th>RD_NO_x</th>
-      <th>CRASH_DATE_EST_I</th>
-      <th>CRASH_DATE_x</th>
-      <th>POSTED_SPEED_LIMIT</th>
-      <th>TRAFFIC_CONTROL_DEVICE</th>
-      <th>DEVICE_CONDITION</th>
-      <th>WEATHER_CONDITION</th>
-      <th>LIGHTING_CONDITION</th>
-      <th>FIRST_CRASH_TYPE</th>
-      <th>...</th>
-      <th>EMS_RUN_NO</th>
-      <th>DRIVER_ACTION</th>
-      <th>DRIVER_VISION</th>
-      <th>PHYSICAL_CONDITION</th>
-      <th>PEDPEDAL_ACTION</th>
-      <th>PEDPEDAL_VISIBILITY</th>
-      <th>PEDPEDAL_LOCATION</th>
-      <th>BAC_RESULT</th>
-      <th>BAC_RESULT VALUE</th>
-      <th>CELL_PHONE_USE</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>073682ef84ff827659552d4254ad1b98bfec24935cc9cc...</td>
-      <td>JB460108</td>
-      <td>NaN</td>
-      <td>10/02/2018 06:30:00 PM</td>
-      <td>10</td>
-      <td>NO CONTROLS</td>
-      <td>NO CONTROLS</td>
-      <td>CLEAR</td>
-      <td>DARKNESS</td>
-      <td>PARKED MOTOR VEHICLE</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>NONE</td>
-      <td>NOT OBSCURED</td>
-      <td>NORMAL</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>TEST NOT OFFERED</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1560fb8a1e32b528fef8bfd677d2b3fc5ab37278b157fa...</td>
-      <td>JC325941</td>
-      <td>NaN</td>
-      <td>06/27/2019 04:00:00 PM</td>
-      <td>45</td>
-      <td>NO CONTROLS</td>
-      <td>NO CONTROLS</td>
-      <td>CLEAR</td>
-      <td>DAYLIGHT</td>
-      <td>SIDESWIPE SAME DIRECTION</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>UNKNOWN</td>
-      <td>UNKNOWN</td>
-      <td>NORMAL</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>TEST NOT OFFERED</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1560fb8a1e32b528fef8bfd677d2b3fc5ab37278b157fa...</td>
-      <td>JC325941</td>
-      <td>NaN</td>
-      <td>06/27/2019 04:00:00 PM</td>
-      <td>45</td>
-      <td>NO CONTROLS</td>
-      <td>NO CONTROLS</td>
-      <td>CLEAR</td>
-      <td>DAYLIGHT</td>
-      <td>SIDESWIPE SAME DIRECTION</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>UNKNOWN</td>
-      <td>UNKNOWN</td>
-      <td>NORMAL</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>TEST NOT OFFERED</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>009e9e67203442370272e1a13d6ee51a4155dac65e583d...</td>
-      <td>JA329216</td>
-      <td>NaN</td>
-      <td>06/30/2017 04:00:00 PM</td>
-      <td>35</td>
-      <td>STOP SIGN/FLASHER</td>
-      <td>FUNCTIONING PROPERLY</td>
-      <td>CLEAR</td>
-      <td>DAYLIGHT</td>
-      <td>TURNING</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>FAILED TO YIELD</td>
-      <td>UNKNOWN</td>
-      <td>UNKNOWN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>TEST NOT OFFERED</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>009e9e67203442370272e1a13d6ee51a4155dac65e583d...</td>
-      <td>JA329216</td>
-      <td>NaN</td>
-      <td>06/30/2017 04:00:00 PM</td>
-      <td>35</td>
-      <td>STOP SIGN/FLASHER</td>
-      <td>FUNCTIONING PROPERLY</td>
-      <td>CLEAR</td>
-      <td>DAYLIGHT</td>
-      <td>TURNING</td>
-      <td>...</td>
-      <td>NaN</td>
-      <td>NONE</td>
-      <td>NOT OBSCURED</td>
-      <td>NORMAL</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>TEST NOT OFFERED</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 78 columns</p>
-</div>
-
-
-
-
-```python
-# A quick preview of the data
-display(crash_df.info())
-crash_df.describe()
-```
-
-    <class 'pandas.core.frame.DataFrame'>
-    Int64Index: 983415 entries, 0 to 983414
-    Data columns (total 78 columns):
-     #   Column                         Non-Null Count   Dtype  
-    ---  ------                         --------------   -----  
-     0   CRASH_RECORD_ID                983415 non-null  object 
-     1   RD_NO_x                        975129 non-null  object 
-     2   CRASH_DATE_EST_I               55419 non-null   object 
-     3   CRASH_DATE_x                   983415 non-null  object 
-     4   POSTED_SPEED_LIMIT             983415 non-null  int64  
-     5   TRAFFIC_CONTROL_DEVICE         983415 non-null  object 
-     6   DEVICE_CONDITION               983415 non-null  object 
-     7   WEATHER_CONDITION              983415 non-null  object 
-     8   LIGHTING_CONDITION             983415 non-null  object 
-     9   FIRST_CRASH_TYPE               983415 non-null  object 
-     10  TRAFFICWAY_TYPE                983415 non-null  object 
-     11  LANE_CNT                       446675 non-null  float64
-     12  ALIGNMENT                      983415 non-null  object 
-     13  ROADWAY_SURFACE_COND           983415 non-null  object 
-     14  ROAD_DEFECT                    983415 non-null  object 
-     15  REPORT_TYPE                    954194 non-null  object 
-     16  CRASH_TYPE                     983415 non-null  object 
-     17  INTERSECTION_RELATED_I         264399 non-null  object 
-     18  NOT_RIGHT_OF_WAY_I             35715 non-null   object 
-     19  HIT_AND_RUN_I                  242928 non-null  object 
-     20  DAMAGE                         983415 non-null  object 
-     21  DATE_POLICE_NOTIFIED           983415 non-null  object 
-     22  PRIM_CONTRIBUTORY_CAUSE        983415 non-null  object 
-     23  SEC_CONTRIBUTORY_CAUSE         983415 non-null  object 
-     24  STREET_NO                      983415 non-null  int64  
-     25  STREET_DIRECTION               983410 non-null  object 
-     26  STREET_NAME                    983413 non-null  object 
-     27  BEAT_OF_OCCURRENCE             983403 non-null  float64
-     28  PHOTOS_TAKEN_I                 12866 non-null   object 
-     29  STATEMENTS_TAKEN_I             23004 non-null   object 
-     30  DOORING_I                      3183 non-null    object 
-     31  WORK_ZONE_I                    6462 non-null    object 
-     32  WORK_ZONE_TYPE                 5164 non-null    object 
-     33  WORKERS_PRESENT_I              1493 non-null    object 
-     34  NUM_UNITS                      983415 non-null  int64  
-     35  MOST_SEVERE_INJURY             982532 non-null  object 
-     36  INJURIES_TOTAL                 982542 non-null  float64
-     37  INJURIES_FATAL                 982542 non-null  float64
-     38  INJURIES_INCAPACITATING        982542 non-null  float64
-     39  INJURIES_NON_INCAPACITATING    982542 non-null  float64
-     40  INJURIES_REPORTED_NOT_EVIDENT  982542 non-null  float64
-     41  INJURIES_NO_INDICATION         982542 non-null  float64
-     42  INJURIES_UNKNOWN               982542 non-null  float64
-     43  CRASH_HOUR                     983415 non-null  int64  
-     44  CRASH_DAY_OF_WEEK              983415 non-null  int64  
-     45  CRASH_MONTH                    983415 non-null  int64  
-     46  LATITUDE                       977913 non-null  float64
-     47  LONGITUDE                      977913 non-null  float64
-     48  LOCATION                       977913 non-null  object 
-     49  PERSON_ID                      982540 non-null  object 
-     50  PERSON_TYPE                    982540 non-null  object 
-     51  RD_NO_y                        982539 non-null  object 
-     52  VEHICLE_ID                     962876 non-null  float64
-     53  CRASH_DATE_y                   982540 non-null  object 
-     54  SEAT_NO                        202307 non-null  float64
-     55  CITY                           728774 non-null  object 
-     56  STATE                          736767 non-null  object 
-     57  ZIPCODE                        666120 non-null  object 
-     58  SEX                            967956 non-null  object 
-     59  AGE                            704186 non-null  float64
-     60  DRIVERS_LICENSE_STATE          583538 non-null  object 
-     61  DRIVERS_LICENSE_CLASS          509291 non-null  object 
-     62  SAFETY_EQUIPMENT               979605 non-null  object 
-     63  AIRBAG_DEPLOYED                963642 non-null  object 
-     64  EJECTION                       970329 non-null  object 
-     65  INJURY_CLASSIFICATION          982000 non-null  object 
-     66  HOSPITAL                       180236 non-null  object 
-     67  EMS_AGENCY                     115037 non-null  object 
-     68  EMS_RUN_NO                     18739 non-null   object 
-     69  DRIVER_ACTION                  778324 non-null  object 
-     70  DRIVER_VISION                  778081 non-null  object 
-     71  PHYSICAL_CONDITION             778903 non-null  object 
-     72  PEDPEDAL_ACTION                18564 non-null   object 
-     73  PEDPEDAL_VISIBILITY            18521 non-null   object 
-     74  PEDPEDAL_LOCATION              18565 non-null   object 
-     75  BAC_RESULT                     779427 non-null  object 
-     76  BAC_RESULT VALUE               1254 non-null    float64
-     77  CELL_PHONE_USE                 1156 non-null    object 
-    dtypes: float64(15), int64(6), object(57)
-    memory usage: 592.7+ MB
-
-
-
 ### Column Names and Descriptions
 
 **POSTED_SPEED_LIMIT**	
@@ -475,7 +203,7 @@ def scatter_plot(col,target,df):
     plt.savefig(f'figures/scatter_{col}_v_{target}.png', transparent=True, bbox_inches='tight');
 ```
 
-2. Looking at count plots for the categorical columns. This is where it was decided to focus on Driver_Action. 
+2. The examination of the count plots for the categorical columns helped decide that the focus should be on Driver_Action. 
 
 
 ![countplot driver action](Figures/count_DRIVER_ACTION.png)
@@ -497,12 +225,6 @@ encode_df.info()
 
 
 ```python
-# LabelEncode Feature Columns onto a new df to examine against our target
-from sklearn.preprocessing import LabelEncoder
-
-# creating instance of labelencoder
-labelencoder = LabelEncoder()
-
 # Using for loop to loop through object_col and Assign numerical values 
 # and storing in another column
 for col in object_col:
@@ -515,83 +237,20 @@ encode_df.head()
 4. Histograms of numerical columns were made.
 
 
-```python
-# Histograms 
-encode_df.hist(figsize = (30,20))
-plt.savefig('Figures/crash_df_hist.png', dpi=300, bbox_inches='tight');
-```
-
-
 ![histogram](Figures/crash_df_hist.png)
 
 
 
-5. Barplots and scatterplots were made to get a better idea of the breakdown of the data and helped narrow down the target to Failed to yield. 
-
-
-```python
-# Bar graph of the Crash Type
-
-plt.figure(figsize=(15,15))
-
-y= fail_yield.FIRST_CRASH_TYPE.value_counts().values
-x=fail_yield.FIRST_CRASH_TYPE.value_counts().index
-
-sns.barplot(y, x)
-plt.title('Fail to Yield First Crash Type', size=30)
-plt.ylabel("Crash Type", size=25, rotation=90)
-plt.xlabel("Quantity", size=25)
-plt.xticks(size=15)
-plt.yticks(size=15)
-
-plt.savefig('Figures/Fail_yield_first_crash.png', dpi=300, bbox_inches='tight');
-```
+5. Barplots and scatterplots were made to get a better idea of the breakdown of the data and helped narrow down the target to Failed to Yield. 
 
 
 ![barplot failed to yield crash type](Figures/Fail_yield_first_crash.png)
 
 
 
-```python
-# Bar graph of the Crash Type
-
-plt.figure(figsize=(15,15))
-
-x= fail_yield.CRASH_HOUR.value_counts().values
-y=fail_yield.CRASH_HOUR.value_counts().index
-
-sns.barplot(y, x)
-plt.title('Fail to Yield CRASH HOUR', size=30)
-plt.ylabel("Quantity", size=25, rotation=90)
-plt.xlabel("Hour", size=25)
-plt.xticks(size=15)
-plt.yticks(size=15)
-
-plt.savefig('Figures/Fail_yield_crash_hour.png', dpi=300, bbox_inches='tight');
-```
-
-
 ![Failed to yield crash hour](Figures/Fail_yield_crash_hour.png)
 
 
-
-```python
-# Bar graph of the Crash Type
-
-plt.figure(figsize=(15,15))
-
-x= fail_yield.DRIVER_VISION.value_counts().values
-y=fail_yield.DRIVER_VISION.value_counts().index
-
-sns.barplot(y, x)
-plt.title('Fail to Yield DRIVER VISION', size=30)
-plt.ylabel("Quantity", size=25, rotation=90)
-plt.xlabel("", size=25)
-plt.xticks(size=15, rotation=90)
-plt.yticks(size=15)
-
-plt.savefig('Figures/Fail_yield_driver_vision.png', dpi=300, bbox_inches='tight');
-```
 
 
 ![failed to yield drivers vision](Figures/Fail_yield_driver_vision.png)
@@ -648,7 +307,7 @@ def plot_feature_importances(model):
 ```
 
 
-THe data was then Train-Test_Split and scaled using StandardScaler
+The data was then Train-Test_Split and scaled using StandardScaler
 
 
 
@@ -686,19 +345,27 @@ print(f'time: {dum_n}')
 
 The scores with the Dummy Classifier are low, which was to be expected. There is a very high false positive rate. 
 
-```python
-print_metrics(y_preds, y_test, dum_n)
-```
+*Results:*
+ 
+Precision Score: 0.7461035884358053
+Recall Score: 0.7469826184367434
+Accuracy Score: 0.7469826184367434
+F1 Score: 0.7465423102142656
 
-    Precision Score: 0.14946210564486884
-    Recall Score: 0.15072834765648807
-    Accuracy Score: 0.7469826184367434
-    F1 Score: 0.15009255606469818
-    Confision Matrix: 
-    [[80212 14073]
-     [13934  2473]]
-    
-     Run Time: 0.05151510238647461
+Confision Matrix: 
+
+
+|             |                       _Actual_         |
+| :---------- | :---------: | :---------: | ---------: |
+|             |             | *Postive*   | *Negative* |
+|             | :---------: | :---------: | ---------: |
+| _Predicted_ | *Postive*   |  80212      |  13934     |
+|             | :---------: | :---------: | ---------: |
+|             | *Negative*  |  14073      |  2473      |
+
+
+ Run Time: 0.07404804229736328
+
 
 
 ### Final model: Decision Tree
@@ -734,23 +401,30 @@ dt_n = end - start
 dt_n
 ```
 
-The results of this model were much better than the baseline model, but still not great. 
+The results of this model were much better than the baseline model especially with the false negatives. 
 
 ```python
 print_metrics(y_pred, y_test, dt_n)
 ```
 
-    Precision Score: 0.5809259035416415
-    Recall Score: 0.7744742567077593
-    Accuracy Score: 0.9120713330683338
-    F1 Score: 0.6638809268915979
-    Confision Matrix: 
-    [[91347  6934]
-     [ 2799  9612]]
-    
-     Run Time: 1.4316511154174805
+Precision Score: 0.8579048
+Recall Score: 0.99092898
+Accuracy Score: 0.8526903479926282
+F1 Score: 0.91963133
+Confision Matrix: 
+
+|             |                       _Actual_         |
+| :---------- | :---------: | :---------: | ---------: |
+|             |             | *Postive*   | *Negative* |
+|             | :---------: | :---------: | ---------: |
+| _Predicted_ | *Postive*   |  93292      |   854      |
+|             | :---------: | :---------: | ---------: |
+|             | *Negative*  |  15452      |   1094     |
+
      
-     
+
+There are two precision, recall, and F1-Score. The second number listed does not take into account the class imbalance. The first score is weighted to take the class imbalance into account. 
+
 ### Recommendations
 
 In driver education classes:
