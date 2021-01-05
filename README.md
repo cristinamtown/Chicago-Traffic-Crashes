@@ -407,11 +407,11 @@ The results of this model were much better than the baseline model especially wi
 print_metrics(y_pred, y_test, dt_n)
 ```
 
-Precision Score: 0.8579048
-Recall Score: 0.99092898
-Accuracy Score: 0.8526903479926282
-F1 Score: 0.91963133
-Confision Matrix: 
+- Precision Score: 0.8579048
+- Recall Score: 0.99092898
+- Accuracy Score: 0.8526903479926282
+- F1 Score: 0.91963133
+- Confision Matrix: 
 
 <table>
 <thead>
