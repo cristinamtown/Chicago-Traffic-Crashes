@@ -1,6 +1,7 @@
+
 ## Business Case
 
-Using the City of Chicago Traffic Crashes dataframe, we are going to model the data to try to answer the following questions:
+Using data from the City of Chicago Traffic dataframe, this notebook will create a model to try to answer the following questions about crashes in Chicago:
 
 - Primary causes of car crashes in the Chicago Area
 - Main types of car crashes
