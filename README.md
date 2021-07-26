@@ -12,8 +12,8 @@ Focus in this analysis:
 
 
 ## Methodology:
-1. Obtain and merge the traffic crash data from the Chicago Data Portal regarding the crashes and the people 
-2. Examine and Scrubbing the data to prepare it for modeling
+1. Obtain and merge the traffic crash data from the Chicago Data Portal regarding the crashes and the people involved in the crashes 
+2. Examine and Scrub the data to prepare it for modeling
 3. Exploration of the data
 4. Perform and evaluate a baseline model of the data
 5. Perform and evaluate other models of the data and decide which to use
