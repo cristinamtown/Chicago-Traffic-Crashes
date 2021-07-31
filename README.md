@@ -5,7 +5,7 @@ Using data from the City of Chicago Traffic dataframe, this notebook will create
 
 - Primary causes of car crashes in the Chicago Area
 - Main types of car crashes
-- What can drivers do to prevent crashes?
+- How drivers can prevent future crashes
 
 Focus in this analysis:
 - Use a model to predict whether the main cause of crash was driver’s failure to yield
