@@ -8,7 +8,7 @@ Using data from the City of Chicago Traffic dataframe, this notebook will create
 - How drivers can prevent future crashes
 
 Focus in this analysis:
-- Use a model to predict whether the main cause of crash was driver’s failure to yield
+- Create a model to predict whether the main cause of crash was driver’s failure to yield
 
 
 ## Methodology:
