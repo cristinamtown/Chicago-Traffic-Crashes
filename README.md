@@ -42,6 +42,8 @@ crash_df = pd.merge(crash_df, people_df, on='CRASH_RECORD_ID', how='left')
 
 ### Column Names and Descriptions
 
+Below is an overview of the names and a brief description of the columns in the dataframe. 
+
 **POSTED_SPEED_LIMIT**	
 Posted speed limit, as determined by reporting officer
 
